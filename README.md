@@ -24,18 +24,16 @@ cp .env.example .env.local
 Set:
 
 - `DATABASE_URL`: your Render external connection string
-- `RENDER_SQL_QUERY`: a safe SQL query returning the dataset for the assistant
+- `DATA_ROW_LIMIT` (optional): rows read per table, default `50`, max `200`
 - `OPENAI_API_KEY`: your OpenAI API key
 - `OPENAI_ASSISTANT_ID`: your assistant id (format usually starts with `asst_`)
 
-Example query:
+This app automatically reads from these tables:
 
-```sql
-SELECT id, customer_name, status, created_at
-FROM orders
-ORDER BY created_at DESC
-LIMIT 50;
-```
+- `accounts`
+- `clients`
+- `tax_sales`
+- `parcels`
 
 ## 3. Run Locally
 
@@ -56,5 +54,5 @@ Open `http://localhost:3000`.
 ## 5. Important Notes
 
 - The server route always sends database rows plus the user question to your assistant.
-- Keep `RENDER_SQL_QUERY` read-only and bounded (use `LIMIT`) to avoid large payloads.
+- The app does not require a SQL env variable; it performs fixed read-only `SELECT` queries against the four schema tables.
 - Do not expose secrets in the client. All database/OpenAI access stays server-side.
